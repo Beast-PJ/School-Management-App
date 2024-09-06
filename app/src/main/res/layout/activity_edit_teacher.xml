@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/gradient_background">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/add_teach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Teacher"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:textStyle="bold"/>
+
+    <!-- Avatar Selection -->
+    <ImageView
+        android:id="@+id/editTeacherAvatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@+id/add_teach"
+        android:src="@color/black"
+        android:background="@drawable/circle_background"
+        android:scaleType="centerCrop"
+        android:elevation="8dp"
+        android:onClick="onChooseAvatarClick"/>
+
+    <!-- Teacher Name -->
+    <EditText
+        android:id="@+id/editTeacherNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Teacher Name"
+        android:layout_below="@id/editTeacherAvatar"
+        android:layout_marginTop="16dp"
+        android:inputType="textPersonName"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColorHint="#B0BEC5"
+        android:textColor="#FFFFFF" />
+
+    <!-- Teacher Phone -->
+    <EditText
+        android:id="@+id/editTeacherPhoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Phone Number"
+        android:layout_below="@id/editTeacherNameEditText"
+        android:layout_marginTop="16dp"
+        android:inputType="phone"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColorHint="#B0BEC5"
+        android:textColor="#FFFFFF" />
+
+    <!-- Update Button -->
+    <Button
+        android:id="@+id/updateTeacherButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Update Teacher"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#FF5722"
+        android:layout_below="@id/editTeacherPhoneEditText"
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:elevation="4dp"/>
+</RelativeLayout>

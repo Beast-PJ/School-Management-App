@@ -1,16 +1,12 @@
 package com.beast.schoolmanagementapp;
-package com.example.schoolmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +34,8 @@ public class ManageTeachersActivity extends AppCompatActivity {
                 // Logic to edit teacher
                 Intent intent = new Intent(ManageTeachersActivity.this, EditTeacherActivity.class);
                 intent.putExtra("teacherName", teacher.getName());
-                intent.putExtra("teacherSubject", teacher.getSubject());
-                intent.putExtra("teacherEmail", teacher.getEmail());
+                intent.putExtra("teacherPhone", teacher.getPhoneNumber());
+                intent.putExtra("teacherAvatar", teacher.getAvatarResId());
                 startActivity(intent);
             }
 
@@ -53,14 +49,14 @@ public class ManageTeachersActivity extends AppCompatActivity {
         teachersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         teachersRecyclerView.setAdapter(teacherAdapter);
 
-        // Load Teachers (dummy data for now)
+        // Load Teachers
         loadTeachers();
 
-        // FAB onClick Listener to add a new teacher
+        // Floating Action Button to Add a New Teacher
         addTeacherFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start AddTeacherActivity to add a new teacher
+                // Start AddTeacherActivity
                 Intent intent = new Intent(ManageTeachersActivity.this, AddTeacherActivity.class);
                 startActivity(intent);
             }
@@ -69,9 +65,9 @@ public class ManageTeachersActivity extends AppCompatActivity {
 
     // Load Teachers (Dummy Data)
     private void loadTeachers() {
-        // Dummy data for demonstration purposes
-        teacherList.add(new Teacher("John Doe", "Math", "johndoe@gmail.com"));
-        teacherList.add(new Teacher("Jane Smith", "Science", "janesmith@gmail.com"));
+        teacherList.add(new Teacher("John Doe", "+123456789", R.drawable.blue_gradient_card));
+        teacherList.add(new Teacher("Jane Smith", "+987654321", R.drawable.blue_gradient_background));
+        teacherList.add(new Teacher("Mark Taylor", "+1122334455", R.drawable.blue_gradient_header));
         teacherAdapter.notifyDataSetChanged();
     }
 }

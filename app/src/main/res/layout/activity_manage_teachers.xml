@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
+    android:padding="5dp"
     android:background="@drawable/blue_gradient_background">
 
     <!-- Header Section -->
@@ -14,21 +14,22 @@
         android:layout_height="wrap_content"
         android:text="Manage Teachers"
         android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textSize="26sp"
         android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:padding="16dp" />
+        android:padding="8dp"
+        android:layout_marginTop="16dp" />
 
     <!-- RecyclerView for Teacher List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/teachersRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_below="@id/manageTeachersTitle"
         tools:listitem="@layout/teacher_list_item"
         android:layout_above="@id/addTeacherFab"
-        android:padding="8dp"
         android:scrollbars="vertical" />
 
     <!-- Floating Action Button to Add New Teacher -->
@@ -40,7 +41,8 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
-        android:backgroundTint="#2196F3"
+        android:tint="#FFFFFF"
+        android:elevation="8dp"
         app:maxImageSize="48dp" />
 
 </RelativeLayout>
