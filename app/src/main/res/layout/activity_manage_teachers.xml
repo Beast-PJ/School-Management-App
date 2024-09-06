@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp"
+    android:background="@drawable/blue_gradient_background">
+
+    <!-- Header Section -->
+    <TextView
+        android:id="@+id/manageTeachersTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage Teachers"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp" />
+
+    <!-- RecyclerView for Teacher List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/teachersRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/manageTeachersTitle"
+        tools:listitem="@layout/teacher_list_item"
+        android:layout_above="@id/addTeacherFab"
+        android:padding="8dp"
+        android:scrollbars="vertical" />
+
+    <!-- Floating Action Button to Add New Teacher -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addTeacherFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="#2196F3"
+        app:maxImageSize="48dp" />
+
+</RelativeLayout>
