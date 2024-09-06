@@ -13,7 +13,10 @@
         android:theme="@style/Theme.SchoolManagementApp"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
+            android:name=".User.Login_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".User.Create_account_activity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

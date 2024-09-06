@@ -1,5 +1,6 @@
 package com.beast.schoolmanagementapp;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,6 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
     public void onBindViewHolder(@NonNull TeacherViewHolder holder, int position) {
         Teacher teacher = teacherList.get(position);
         holder.nameTextView.setText(teacher.getName());
-        holder.subjectTextView.setText(teacher.getSubject());
-        holder.emailTextView.setText(teacher.getEmail());
 
         // Set click listeners for buttons
         holder.editButton.setOnClickListener(new View.OnClickListener() {
@@ -67,11 +66,10 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
         Button editButton;
         Button deleteButton;
 
+        @SuppressLint("WrongViewCast")
         public TeacherViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.teacherNameTextView);
-            subjectTextView = itemView.findViewById(R.id.teacherSubjectTextView);
-            emailTextView = itemView.findViewById(R.id.teacherEmailTextView);
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
         }

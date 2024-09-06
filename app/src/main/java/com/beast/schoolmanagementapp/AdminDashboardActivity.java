@@ -30,28 +30,28 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
 
-        manageStudentsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, ManageStudentsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        manageEventsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, ManageEventsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        viewReportsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, ViewReportsActivity.class);
-                startActivity(intent);
-            }
-        });
+//        manageStudentsCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(AdminDashboardActivity.this, ManageStudentsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        manageEventsCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(AdminDashboardActivity.this, ManageEventsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        viewReportsCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(AdminDashboardActivity.this, ViewReportsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }
