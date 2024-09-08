@@ -31,6 +31,18 @@
             android:name=".User.Create_account_activity"
             android:exported="false" />
         <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddTeacherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditTeacherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageTeachersActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false"></activity>
     </application>

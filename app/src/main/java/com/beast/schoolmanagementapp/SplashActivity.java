@@ -10,8 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.beast.schoolmanagementapp.R;
+
 import com.beast.schoolmanagementapp.User.Login_Activity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -50,9 +52,14 @@ public class SplashActivity extends AppCompatActivity {
 
         // After the SPLASH_DURATION, transition to Login Activity
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, Login_Activity.class);
-            startActivity(intent);
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if(currentUser==null){
+                startActivity(new Intent(SplashActivity.this, Login_Activity.class));
+            }
+            else{
+                startActivity(new Intent(SplashActivity.this,MainActivity.class));
+            }
             finish();
-        }, SPLASH_DURATION);
+        }, 1000);
     }
 }
