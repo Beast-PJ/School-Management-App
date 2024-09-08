@@ -32,18 +32,16 @@ public class Login_Activity extends AppCompatActivity {
     EditText emailedittxt, passedittxt;
     Button login_btn;
     ProgressBar progressBar;
-    TextView create_acc_btntxt, textView1, textView2;
+    TextView create_acc_btntxt, textView1;
     CardView cardView, cardView2;
     LinearLayout linearLayout;
     private FirebaseAuth mAuth;
-
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
         emailedittxt = findViewById(R.id.emailedittxt);
         passedittxt = findViewById(R.id.passedittxt);
@@ -55,14 +53,13 @@ public class Login_Activity extends AppCompatActivity {
         cardView2 = findViewById(R.id.cardView2);
         linearLayout = findViewById(R.id.toplinearLayout);
 
-
-// ...
-// Initialize Firebase Auth
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
 
         login_btn.setOnClickListener(view -> login_user());
         create_acc_btntxt.setOnClickListener(view -> startActivity(new Intent(Login_Activity.this, Create_account_activity.class)));
+
+        // Load animations
         Animation drop_down = AnimationUtils.loadAnimation(this, R.anim.bottom_down);
         Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 
@@ -71,50 +68,53 @@ public class Login_Activity extends AppCompatActivity {
         textView1.startAnimation(drop_down);
         linearLayout.startAnimation(drop_down);
     }
-        void login_user () {
-            String email = emailedittxt.getText().toString();
-            String pass = passedittxt.getText().toString();
 
-            boolean isvalidated = validate_data(email);
-            if (!isvalidated) {
-                return;
-            }
-            login_acc_firebase(email, pass);
+    void login_user() {
+        String email = emailedittxt.getText().toString();
+        String pass = passedittxt.getText().toString();
+
+        boolean isvalidated = validate_data(email);
+        if (!isvalidated) {
+            return;
         }
-        void change_in_progress (Boolean inprogress){
-            if (inprogress) {
-                progressBar.setVisibility(View.VISIBLE);
-                login_btn.setVisibility(View.GONE);
-            } else {
-                progressBar.setVisibility(View.GONE);
-                login_btn.setVisibility(View.VISIBLE);
-            }
+        login_acc_firebase(email, pass);
+    }
+
+    void change_in_progress(Boolean inprogress) {
+        if (inprogress) {
+            progressBar.setVisibility(View.VISIBLE);
+            login_btn.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            login_btn.setVisibility(View.VISIBLE);
         }
-        boolean validate_data (String email){
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                emailedittxt.setError("Invalid Email");
-                return false;
-            }
-            if (passedittxt.length() < 6) {
-                passedittxt.setError("Password lenght is Invalid");
-                return false;
-            }
-            return true;
+    }
+
+    boolean validate_data(String email) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailedittxt.setError("Invalid Email");
+            return false;
         }
-        void login_acc_firebase (String email, String pass){
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            change_in_progress(true);
-            firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    change_in_progress(false);
-                    if (task.isSuccessful()) {
-                            startActivity(new Intent(Login_Activity.this, AdminDashboardActivity.class));
-                    } else {
-                        Utility.showToast(Login_Activity.this, Objects.requireNonNull(task.getException()).getLocalizedMessage());
-                    }
+        if (passedittxt.length() < 6) {
+            passedittxt.setError("Password length is Invalid");
+            return false;
+        }
+        return true;
+    }
+
+    void login_acc_firebase(String email, String pass) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        change_in_progress(true);
+        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                change_in_progress(false);
+                if (task.isSuccessful()) {
+                    startActivity(new Intent(Login_Activity.this, AdminDashboardActivity.class));
+                } else {
+                    Utility.showToast(Login_Activity.this, Objects.requireNonNull(task.getException()).getLocalizedMessage());
                 }
-            });
-        }
-
+            }
+        });
+    }
 }
