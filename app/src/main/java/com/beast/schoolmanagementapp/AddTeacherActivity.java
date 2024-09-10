@@ -1,55 +1,103 @@
 package com.beast.schoolmanagementapp;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddTeacherActivity extends AppCompatActivity {
 
-    private EditText teacherNameEditText;
-    private EditText teacherPhoneEditText;
-    private ImageView teacherAvatar;
-    private int selectedAvatarResId = R.drawable.blue_gradient_background; // Default avatar
+    private EditText teacherEmail, teacherName;
+    private Button addTeacherBtn;
+    private ProgressBar progressBar;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_teacher);
 
-        teacherNameEditText = findViewById(R.id.teacherNameEditText);
-        teacherPhoneEditText = findViewById(R.id.teacherPhoneEditText);
-        teacherAvatar = findViewById(R.id.teacherAvatar);
+        teacherEmail = findViewById(R.id.teacher_email);
+        teacherName = findViewById(R.id.teacher_name);
+        addTeacherBtn = findViewById(R.id.add_teacher_btn);
+        progressBar = findViewById(R.id.progressBar);
 
-        // Set click listener for avatar selection
-        teacherAvatar.setOnClickListener(v -> {
-            // Logic to choose avatar can be added here (e.g., open image picker)
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        addTeacherBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTeacher();
+            }
         });
     }
 
-    public void onSaveTeacherClick(View view) {
-        String name = teacherNameEditText.getText().toString().trim();
-        String phone = teacherPhoneEditText.getText().toString().trim();
+    private void addTeacher() {
+        String email = teacherEmail.getText().toString().trim();
+        String name = teacherName.getText().toString().trim();
 
-        if (name.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(email)) {
+            teacherEmail.setError("Email is required");
             return;
         }
 
-        // Create a new Teacher object
-        Teacher newTeacher = new Teacher(name, phone, selectedAvatarResId);
+        if (TextUtils.isEmpty(name)) {
+            teacherName.setError("Name is required");
+            return;
+        }
 
-        // Send back the result to the calling activity
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("teacherName", newTeacher.getName());
-        resultIntent.putExtra("teacherPhone", newTeacher.getPhoneNumber());
-        resultIntent.putExtra("teacherAvatar", newTeacher.getAvatarResId());
+        progressBar.setVisibility(View.VISIBLE);
 
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        // Store teacher data in Firestore
+        Map<String, Object> teacher = new HashMap<>();
+        teacher.put("name", name);
+        teacher.put("email", email);
+
+        // Add teacher to Firestore and send password reset email
+        db.collection("teachers").add(teacher)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        sendPasswordResetEmail(email);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                        // Show error message
+                    }
+                });
+    }
+
+    private void sendPasswordResetEmail(String email) {
+        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Success message (teacher gets email for setting password)
+            } else {
+                // Error message handling
+                if (task.getException() instanceof FirebaseAuthInvalidUserException || task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid email format or user does not exist
+                }
+            }
+            progressBar.setVisibility(View.GONE);
+        });
     }
 }

@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/gradient_background">
+
+    <!-- Welcome Title -->
+    <TextView
+        android:id="@+id/welcome_teacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome, Teacher!"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+    <!-- Teacher Options -->
+    <LinearLayout
+        android:id="@+id/teacher_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_teacher"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/card_background"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manage Students"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:id="@+id/option2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Assignments"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:id="@+id/option3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Reports"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="15dp"/>
+    </LinearLayout>
+</RelativeLayout>

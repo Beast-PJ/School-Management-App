@@ -1,12 +1,9 @@
 package com.beast.schoolmanagementapp.User;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,11 +16,13 @@ import androidx.cardview.widget.CardView;
 
 import com.beast.schoolmanagementapp.AdminDashboardActivity;
 import com.beast.schoolmanagementapp.R;
-import com.beast.schoolmanagementapp.Utility;
+import com.beast.schoolmanagementapp.TeacherDashboardActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
@@ -32,89 +31,72 @@ public class Login_Activity extends AppCompatActivity {
     EditText emailedittxt, passedittxt;
     Button login_btn;
     ProgressBar progressBar;
-    TextView create_acc_btntxt, textView1;
     CardView cardView, cardView2;
     LinearLayout linearLayout;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         emailedittxt = findViewById(R.id.emailedittxt);
         passedittxt = findViewById(R.id.passedittxt);
         login_btn = findViewById(R.id.login_btn);
         progressBar = findViewById(R.id.progressbar);
-        create_acc_btntxt = findViewById(R.id.create_acc_btntxt);
-        textView1 = findViewById(R.id.textview);
         cardView = findViewById(R.id.cardView);
         cardView2 = findViewById(R.id.cardView2);
         linearLayout = findViewById(R.id.toplinearLayout);
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-
-        login_btn.setOnClickListener(view -> login_user());
-        create_acc_btntxt.setOnClickListener(view -> startActivity(new Intent(Login_Activity.this, Create_account_activity.class)));
-
-        // Load animations
-        Animation drop_down = AnimationUtils.loadAnimation(this, R.anim.bottom_down);
-        Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-
-        cardView.startAnimation(drop_down);
-        cardView2.startAnimation(fade_in);
-        textView1.startAnimation(drop_down);
-        linearLayout.startAnimation(drop_down);
+        login_btn.setOnClickListener(view -> loginUser());
     }
 
-    void login_user() {
+    private void loginUser() {
         String email = emailedittxt.getText().toString();
-        String pass = passedittxt.getText().toString();
+        String password = passedittxt.getText().toString();
 
-        boolean isvalidated = validate_data(email);
-        if (!isvalidated) {
-            return;
-        }
-        login_acc_firebase(email, pass);
-    }
+        if (!validateData(email, password)) return;
 
-    void change_in_progress(Boolean inprogress) {
-        if (inprogress) {
-            progressBar.setVisibility(View.VISIBLE);
-            login_btn.setVisibility(View.GONE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-            login_btn.setVisibility(View.VISIBLE);
-        }
-    }
-
-    boolean validate_data(String email) {
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailedittxt.setError("Invalid Email");
-            return false;
-        }
-        if (passedittxt.length() < 6) {
-            passedittxt.setError("Password length is Invalid");
-            return false;
-        }
-        return true;
-    }
-
-    void login_acc_firebase(String email, String pass) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        change_in_progress(true);
-        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                change_in_progress(false);
                 if (task.isSuccessful()) {
-                    startActivity(new Intent(Login_Activity.this, AdminDashboardActivity.class));
+                    String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+                    // Fetch user role from Firestore
+                    db.collection("users").document(userId).get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task1.getResult();
+                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                String role = documentSnapshot.getString("role");
+                                if ("admin".equals(role)) {
+                                    startActivity(new Intent(Login_Activity.this, AdminDashboardActivity.class));
+                                } else if ("teacher".equals(role)) {
+                                    startActivity(new Intent(Login_Activity.this, TeacherDashboardActivity.class));
+                                }
+                                finish(); // Close login activity
+                            }
+                        }
+                    });
                 } else {
-                    Utility.showToast(Login_Activity.this, Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                    // Handle login failure
                 }
             }
         });
+    }
+
+    private boolean validateData(String email, String password) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailedittxt.setError("Invalid email");
+            return false;
+        }
+        if (password.length() < 6) {
+            passedittxt.setError("Password length is invalid");
+            return false;
+        }
+        return true;
     }
 }

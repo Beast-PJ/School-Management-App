@@ -31,45 +31,49 @@
         android:elevation="8dp"
         android:onClick="onChooseAvatarClick"/>
 
-    <!-- Teacher Name -->
+    <!-- Teacher Password -->
     <EditText
-        android:id="@+id/teacherNameEditText"
+        android:id="@+id/teacher_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Teacher Name"
+        android:hint="Enter Teacher's Name"
+        android:inputType="textPassword"
+        android:padding="10dp"
         android:layout_below="@id/teacherAvatar"
-        android:layout_marginTop="16dp"
-        android:inputType="textPersonName"
-        android:padding="12dp"
         android:background="@drawable/edittext_background"
-        android:textColorHint="#B0BEC5"
-        android:textColor="#FFFFFF" />
+        android:layout_marginTop="20dp"/>
 
-    <!-- Teacher Phone -->
+    <!-- Teacher Email -->
     <EditText
-        android:id="@+id/teacherPhoneEditText"
+        android:id="@+id/teacher_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Phone Number"
-        android:layout_below="@id/teacherNameEditText"
-        android:layout_marginTop="16dp"
-        android:inputType="phone"
-        android:padding="12dp"
+        android:hint="Enter Teacher's Email"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
         android:background="@drawable/edittext_background"
-        android:textColorHint="#B0BEC5"
-        android:textColor="#FFFFFF" />
+        android:layout_below="@id/teacher_name"
+        android:layout_marginTop="30dp"/>
 
-    <!-- Save Button -->
+
+
+    <!-- Add Teacher Button -->
     <Button
-        android:id="@+id/saveTeacherButton"
+        android:id="@+id/add_teacher_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Teacher"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/button_gradient"
+        android:layout_below="@id/teacher_email"
+        android:layout_marginTop="30dp"/>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Save Teacher"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#1976D2"
-        android:layout_below="@id/teacherPhoneEditText"
-        android:layout_marginTop="24dp"
-        android:padding="12dp"
-        android:elevation="4dp"/>
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 </RelativeLayout>
