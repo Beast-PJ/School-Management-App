@@ -8,12 +8,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.beast.schoolmanagementapp.User.Login_Activity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -31,35 +32,46 @@ public class SplashActivity extends AppCompatActivity {
 
         // Load animations
         Animation zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
-        Animation zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 
-        // Start the zoom in animation
+        // Start animations
         splashLogo.startAnimation(zoomIn);
+        appName.startAnimation(fadeIn);
 
-        // Start the zoom out animation when zoom in finishes
-        zoomIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                splashLogo.startAnimation(zoomOut);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-
-        // After the SPLASH_DURATION, transition to Login Activity
+        // After SPLASH_DURATION, check the user role and redirect
         new Handler().postDelayed(() -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if(currentUser==null){
+            if (currentUser == null) {
                 startActivity(new Intent(SplashActivity.this, Login_Activity.class));
-            }
-            else{
-                startActivity(new Intent(SplashActivity.this,MainActivity.class));
+            } else {
+                checkUserRole(currentUser.getUid());
             }
             finish();
-        }, 1000);
+        }, SPLASH_DURATION);
+    }
+
+    private void checkUserRole(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String role = documentSnapshot.getString("role");
+                if (role != null) {
+                    switch (role) {
+                        case "admin":
+                            startActivity(new Intent(SplashActivity.this, AdminDashboardActivity.class));
+                            break;
+                        case "teacher":
+                            startActivity(new Intent(SplashActivity.this, TeacherDashboardActivity.class));
+                            break;
+                    }
+                } else {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                }
+                finish();
+            }
+        }).addOnFailureListener(e -> {
+            startActivity(new Intent(SplashActivity.this, Login_Activity.class));
+            finish();
+        });
     }
 }
