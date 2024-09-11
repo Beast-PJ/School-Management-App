@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">School Management App</string>
+    <string name="app_name">School Management</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string-array name="standard_array">
+        <item>Select Standard</item>
+        <item>1st Standard</item>
+        <item>2nd Standard</item>
+        <item>3rd Standard</item>
+        <item>4th Standard</item>
+        <item>5th Standard</item>
+        <item>6th Standard</item>
+        <item>7th Standard</item>
+        <item>8th Standard</item>
+        <item>9th Standard</item>
+        <item>10th Standard</item>
+    </string-array>
+
+    <string-array name="class_array">
+        <item>Select Class</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+    </string-array>
+
 </resources>
