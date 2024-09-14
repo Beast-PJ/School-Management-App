@@ -25,4 +25,12 @@
         <item>D</item>
     </string-array>
 
+    <!-- Time Period Array -->
+    <string-array name="time_period_array">
+        <item>Morning (9:00 AM - 12:00 PM)</item>
+        <item>Afternoon (12:00 PM - 3:00 PM)</item>
+        <item>Evening (3:00 PM - 6:00 PM)</item>
+        <item>Full Day (9:00 AM - 6:00 PM)</item>
+    </string-array>
+
 </resources>

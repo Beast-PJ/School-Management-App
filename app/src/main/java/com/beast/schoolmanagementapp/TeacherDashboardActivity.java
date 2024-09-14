@@ -33,7 +33,7 @@ public class TeacherDashboardActivity extends AppCompatActivity {
         // Set OnClickListeners with animation
         cardAttendance.setOnClickListener(v -> {
             animateCard(v);
-//            openAttendance();
+            openAttendance();
         });
 
         cardPerformance.setOnClickListener(v -> {
@@ -75,12 +75,12 @@ public class TeacherDashboardActivity extends AppCompatActivity {
     // Method to set up the drawer and toggle
 
 
-    // Method to open Attendance screen
-//    private void openAttendance() {
-//        Intent intent = new Intent(TeacherDashboardActivity.this, AttendanceActivity.class);
-//        startActivity(intent);
-//    }
-//
+//     Method to open Attendance screen
+    private void openAttendance() {
+        Intent intent = new Intent(TeacherDashboardActivity.this, AttendanceActivity.class);
+        startActivity(intent);
+    }
+
 //    // Method to open Performance screen
 //    private void openPerformance() {
 //        Intent intent = new Intent(TeacherDashboardActivity.this, PerformanceActivity.class);

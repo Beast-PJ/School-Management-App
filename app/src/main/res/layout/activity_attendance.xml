@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/txt_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:text="Hii"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <ListView
+        android:id="@+id/list_view_students"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_header"
+        android:dividerHeight="10dp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Attendance"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="@color/white"
+        android:elevation="5dp"
+        android:padding="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/list_view_students"/>
+
+</RelativeLayout>
