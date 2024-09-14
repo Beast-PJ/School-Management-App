@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +34,7 @@ public class Login_Activity extends AppCompatActivity {
     EditText emailedittxt, passedittxt;
     Button login_btn;
     ProgressBar progressBar;
+    TextView create_acc_btntxt, textView1;
     CardView cardView, cardView2;
     LinearLayout linearLayout;
     private FirebaseAuth mAuth;
@@ -48,11 +52,22 @@ public class Login_Activity extends AppCompatActivity {
         passedittxt = findViewById(R.id.passedittxt);
         login_btn = findViewById(R.id.login_btn);
         progressBar = findViewById(R.id.progressbar);
+        create_acc_btntxt = findViewById(R.id.create_acc_btntxt);
+        textView1 = findViewById(R.id.textview);
         cardView = findViewById(R.id.cardView);
         cardView2 = findViewById(R.id.cardView2);
         linearLayout = findViewById(R.id.toplinearLayout);
 
         login_btn.setOnClickListener(view -> loginUser());
+
+        Animation drop_down = AnimationUtils.loadAnimation(this, R.anim.bottom_down);
+        Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        create_acc_btntxt.setOnClickListener(view -> startActivity(new Intent(Login_Activity.this, Create_account_activity.class)));
+
+        cardView.startAnimation(drop_down);
+        cardView2.startAnimation(fade_in);
+        textView1.startAnimation(drop_down);
+        linearLayout.startAnimation(drop_down);
     }
 
     private void loginUser() {
@@ -60,11 +75,13 @@ public class Login_Activity extends AppCompatActivity {
         String password = passedittxt.getText().toString();
 
         if (!validateData(email, password)) return;
+        change_in_progress(true);
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    change_in_progress(false);
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
                     // Fetch user role from Firestore
                     db.collection("users").document(userId).get().addOnCompleteListener(task1 -> {
@@ -82,10 +99,21 @@ public class Login_Activity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    // Handle login failure
+                    Toast.makeText(Login_Activity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    change_in_progress(false);
                 }
             }
         });
+    }
+
+    public void change_in_progress(Boolean inprogress) {
+        if (inprogress) {
+            progressBar.setVisibility(View.VISIBLE);
+            login_btn.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            login_btn.setVisibility(View.VISIBLE);
+        }
     }
 
     private boolean validateData(String email, String password) {

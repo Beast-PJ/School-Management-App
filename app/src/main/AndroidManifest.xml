@@ -52,6 +52,7 @@
             android:name=".AddStudentActivity"
             android:exported="false" />
 
+
     </application>
 
 </manifest>

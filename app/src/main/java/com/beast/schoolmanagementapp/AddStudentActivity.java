@@ -49,41 +49,50 @@ public class AddStudentActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterStandard = new ArrayAdapter<String>(this, R.layout.spinner_item, getResources().getStringArray(R.array.standard_array)) {
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView textView = view.findViewById(R.id.spinner_text);
-                textView.setText(getItem(position)); // Set text
-                return view;
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.spinner_item, parent, false);
+                }
+                TextView textView = convertView.findViewById(R.id.spinner_text);
+                textView.setText(getItem(position));
+                return convertView;
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = view.findViewById(R.id.spinner_text);
-                textView.setText(getItem(position)); // Set text
-                return view;
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.spinner_item, parent, false);
+                }
+                TextView textView = convertView.findViewById(R.id.spinner_text);
+                textView.setText(getItem(position));
+                return convertView;
             }
         };
         spinnerStandard.setAdapter(adapterStandard);
 
-        // Populate spinnerClass similarly
+// Similarly for class spinner
         ArrayAdapter<String> adapterClass = new ArrayAdapter<String>(this, R.layout.spinner_item, getResources().getStringArray(R.array.class_array)) {
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView textView = view.findViewById(R.id.spinner_text);
-                textView.setText(getItem(position)); // Set text
-                return view;
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.spinner_item, parent, false);
+                }
+                TextView textView = convertView.findViewById(R.id.spinner_text);
+                textView.setText(getItem(position));
+                return convertView;
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = view.findViewById(R.id.spinner_text);
-                textView.setText(getItem(position)); // Set text
-                return view;
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.spinner_item, parent, false);
+                }
+                TextView textView = convertView.findViewById(R.id.spinner_text);
+                textView.setText(getItem(position));
+                return convertView;
             }
         };
         spinnerClass.setAdapter(adapterClass);
+
         // Add Student Button Click Listener
         btnAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override

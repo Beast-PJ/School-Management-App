@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.navigation.NavigationView;
-
 public class TeacherDashboardActivity extends AppCompatActivity {
 
     private CardView cardAttendance, cardPerformance, cardTimetable, cardMessages,cardAddStudent,cardUpdateStudent;
@@ -31,39 +29,35 @@ public class TeacherDashboardActivity extends AppCompatActivity {
         cardUpdateStudent = findViewById(R.id.cardUpdateStudent);
         cardTimetable = findViewById(R.id.cardTimetable);
         cardMessages = findViewById(R.id.cardMessages);
-        drawerLayout = findViewById(R.id.drawer_layout);
-
-        // Set up Toolbar with Drawer Toggle
-        setupDrawer();
 
         // Set OnClickListeners with animation
         cardAttendance.setOnClickListener(v -> {
             animateCard(v);
-            openAttendance();
+//            openAttendance();
         });
 
         cardPerformance.setOnClickListener(v -> {
             animateCard(v);
-            openPerformance();
+//            openPerformance();
         });
 
         cardTimetable.setOnClickListener(v -> {
             animateCard(v);
-            openTimetable();
+//            openTimetable();
         });
 
         cardMessages.setOnClickListener(v -> {
             animateCard(v);
-            openMessages();
+//            openMessages();
         });
         cardAddStudent.setOnClickListener(v -> {
             animateCard(v);
-            openTimetable();
+            openAddStudent();
         });
 
         cardMessages.setOnClickListener(v -> {
             animateCard(v);
-            openMessages();
+//            open();
         });
     }
 
@@ -79,49 +73,40 @@ public class TeacherDashboardActivity extends AppCompatActivity {
     }
 
     // Method to set up the drawer and toggle
-    private void setupDrawer() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Set up NavigationView for future use (e.g., adding menu items)
-        NavigationView navView = findViewById(R.id.nav_view);
-        // Handle nav item clicks if needed
-    }
 
     // Method to open Attendance screen
-    private void openAttendance() {
-        Intent intent = new Intent(TeacherDashboardActivity.this, AttendanceActivity.class);
-        startActivity(intent);
-    }
-
-    // Method to open Performance screen
-    private void openPerformance() {
-        Intent intent = new Intent(TeacherDashboardActivity.this, PerformanceActivity.class);
-        startActivity(intent);
-    }
+//    private void openAttendance() {
+//        Intent intent = new Intent(TeacherDashboardActivity.this, AttendanceActivity.class);
+//        startActivity(intent);
+//    }
+//
+//    // Method to open Performance screen
+//    private void openPerformance() {
+//        Intent intent = new Intent(TeacherDashboardActivity.this, PerformanceActivity.class);
+//        startActivity(intent);
+//    }
 
     // Method to open Timetable screen
-    private void openTimetable() {
-        Intent intent = new Intent(TeacherDashboardActivity.this, TimetableActivity.class);
-        startActivity(intent);
-    }
+//    private void openTimetable() {
+//        Intent intent = new Intent(TeacherDashboardActivity.this, TimetableActivity.class);
+//        startActivity(intent);
+//    }
 
-    private void openMessages() {
-        Intent intent = new Intent(TeacherDashboardActivity.this, MessagesActivity.class);
-        startActivity(intent);
-    }
+//    private void openMessages() {
+//        Intent intent = new Intent(TeacherDashboardActivity.this, MessagesActivity.class);
+//        startActivity(intent);
+//    }
 
     private void openAddStudent() {
         Intent intent = new Intent(TeacherDashboardActivity.this, AddStudentActivity.class);
         startActivity(intent);
     }
-
-    private void openUpdateStudent() {
-        Intent intent = new Intent(TeacherDashboardActivity.this, UpdateStudentActivity.class);
-        startActivity(intent);
-    }
+//
+//    private void openUpdateStudent() {
+//        Intent intent = new Intent(TeacherDashboardActivity.this, UpdateStudentActivity.class);
+//        startActivity(intent);
+//    }
 
     // Override onOptionsItemSelected to handle navigation
     @Override
