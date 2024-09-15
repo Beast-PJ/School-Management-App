@@ -1,65 +1,90 @@
 package com.beast.schoolmanagementapp;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
+import android.widget.CheckBox;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AttendanceActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewAttendance;
     private AttendanceAdapter attendanceAdapter;
-    private Button submitAttendanceButton;
     private List<Student> studentList;
+    private Map<Integer, Boolean> attendanceStatus = new HashMap<>();
+    private TextView tvTotalPresent, tvTotalAbsent, tvPresentPercentage;
+    private Button submitAttendanceButton;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
 
-        recyclerView = findViewById(R.id.recyclerViewAttendance);
+        // Initialize RecyclerView and other UI components
+        recyclerViewAttendance = findViewById(R.id.recyclerViewAttendance);
+        tvTotalPresent = findViewById(R.id.tv_total_present);
+        tvTotalAbsent = findViewById(R.id.tv_total_absent);
+        tvPresentPercentage = findViewById(R.id.tv_present_percentage);
         submitAttendanceButton = findViewById(R.id.submitAttendanceButton);
 
-        // Initialize the student list with data (this should be fetched from your database)
+        // Set layout manager for grid format
+        recyclerViewAttendance.setLayoutManager(new GridLayoutManager(this, 2));
+
+        // Load students into the RecyclerView and set up adapter
+        loadStudents();
+
+        // Submit Attendance Button
+        submitAttendanceButton.setOnClickListener(view -> submitAttendance());
+    }
+
+    private void loadStudents() {
+        // Populate the student list (you may want to fetch this from a database)
         studentList = new ArrayList<>();
-        // Example data
-        studentList.add(new Student(1, "John", "A.", "Doe"));
-        studentList.add(new Student(2, "Jane", "B.", "Smith"));
-        // Add more students as needed
+        studentList.add(new Student(1, "John Doe", 1));
+        studentList.add(new Student(2, "Jane Smith", 2));
+        studentList.add(new Student(3, "Mike Johnson", 3));
+        studentList.add(new Student(4, "Emma Brown", 4));
 
-        // Set up the RecyclerView with a GridLayoutManager
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columns
-        recyclerView.setLayoutManager(gridLayoutManager);
+        // Initialize adapter with student list and attendance status
+        attendanceAdapter = new AttendanceAdapter(studentList, attendanceStatus);
+        recyclerViewAttendance.setAdapter(attendanceAdapter);
 
-        // Set up the adapter
-        attendanceAdapter = new AttendanceAdapter(studentList);
-        recyclerView.setAdapter(attendanceAdapter);
+        // Update the attendance statistics
+        updateAttendanceStats();
+    }
 
-        // Handle attendance submission
-        submitAttendanceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SparseBooleanArray attendanceStatus = attendanceAdapter.getAttendanceStatus();
-                for (int i = 0; i < attendanceStatus.size(); i++) {
-                    int position = attendanceStatus.keyAt(i);
-                    boolean isPresent = attendanceStatus.get(position);
-                    Student student = studentList.get(position);
-                    // Save attendance data for each student based on their attendance status
-                    // Here you would typically store it in a database
-                    Toast.makeText(AttendanceActivity.this, "Roll No: " + student.getRollNumber() +
-                            " is " + (isPresent ? "Present" : "Absent"), Toast.LENGTH_SHORT).show();
-                }
+    // Method to update the attendance statistics based on the checkboxes
+    private void updateAttendanceStats() {
+        int totalStudents = studentList.size();
+        int presentCount = 0;
+
+        // Count present students based on the attendanceStatus map
+        for (int i = 0; i < studentList.size(); i++) {
+            if (attendanceStatus.getOrDefault(i, false)) {
+                presentCount++;
             }
-        });
+        }
+
+        int absentCount = totalStudents - presentCount;
+        double presentPercentage = (totalStudents == 0) ? 0 : (presentCount * 100.0 / totalStudents);
+
+        // Update the TextViews
+        tvTotalPresent.setText(String.valueOf(presentCount) + " / " + totalStudents);
+        tvTotalAbsent.setText(String.valueOf(absentCount));
+        tvPresentPercentage.setText(String.format("%.2f%%", presentPercentage));
+    }
+
+    // Method to handle attendance submission
+    private void submitAttendance() {
+        // You can implement your logic to submit attendance data (e.g., saving to a database)
+
+        // Show confirmation or perform any desired action after submission
     }
 }

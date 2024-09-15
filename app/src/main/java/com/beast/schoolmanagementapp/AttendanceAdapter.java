@@ -1,26 +1,23 @@
 package com.beast.schoolmanagementapp;
 
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
+import java.util.Map;
 
 public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder> {
 
     private List<Student> studentList;
-    private SparseBooleanArray attendanceStatus;
+    private Map<Integer, Boolean> attendanceStatus;
 
-    public AttendanceAdapter(List<Student> studentList) {
+    public AttendanceAdapter(List<Student> studentList, Map<Integer, Boolean> attendanceStatus) {
         this.studentList = studentList;
-        attendanceStatus = new SparseBooleanArray(studentList.size()); // Track attendance status
+        this.attendanceStatus = attendanceStatus;
     }
 
     @NonNull
@@ -33,39 +30,36 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.At
     @Override
     public void onBindViewHolder(@NonNull AttendanceViewHolder holder, int position) {
         Student student = studentList.get(position);
+        holder.tvStudentName.setText(student.getName());
+        holder.tvRollNo.setText("Roll No: " + student.getRollNo());
 
-        // Bind student data
-        holder.rollNumberTextView.setText(String.valueOf(student.getRollNumber()));
-        holder.studentNameTextView.setText(student.getFirstName() + " " + student.getLastName());
+        // Set the checkbox state based on the attendance status map
+        holder.attendanceCheckBox.setOnCheckedChangeListener(null); // Prevent triggering listener when resetting state
+        holder.attendanceCheckBox.setChecked(attendanceStatus.getOrDefault(position, false));
 
-        // Set checkbox listener to track attendance status
+        // Set the listener to update the attendance status
         holder.attendanceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            attendanceStatus.put(holder.getAdapterPosition(), isChecked); // Update attendance status
+            attendanceStatus.put(position, isChecked);
+            // Update stats in the parent activity
+            if (buttonView.getContext() instanceof AttendanceActivity) {
+                ((AttendanceActivity) buttonView.getContext()).updateAttendanceStats();
+            }
         });
-
-        // Set the animation for each item
-        holder.itemView.setAnimation(AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.sildetoright));
     }
-
 
     @Override
     public int getItemCount() {
         return studentList.size();
     }
 
-    public SparseBooleanArray getAttendanceStatus() {
-        return attendanceStatus;
-    }
-
-    public static class AttendanceViewHolder extends RecyclerView.ViewHolder {
-
-        TextView rollNumberTextView, studentNameTextView;
+    static class AttendanceViewHolder extends RecyclerView.ViewHolder {
+        TextView tvStudentName, tvRollNo;
         CheckBox attendanceCheckBox;
 
-        public AttendanceViewHolder(@NonNull View itemView) {
+        AttendanceViewHolder(@NonNull View itemView) {
             super(itemView);
-            rollNumberTextView = itemView.findViewById(R.id.roll_number);
-            studentNameTextView = itemView.findViewById(R.id.student_name);
+            tvStudentName = itemView.findViewById(R.id.tvStudentName);
+            tvRollNo = itemView.findViewById(R.id.tvRollNo);
             attendanceCheckBox = itemView.findViewById(R.id.attendanceCheckBox);
         }
     }
