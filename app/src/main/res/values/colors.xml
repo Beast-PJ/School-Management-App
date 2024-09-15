@@ -38,4 +38,9 @@
 
     <!-- Disabled colors -->
     <color name="disabled">#D3D3D3</color>
+
+    <color name="colorPrimaryLight">#BB86FC</color>
+    <color name="background_color">#F5F5F5</color>
+    <color name="buttonTextColor">#FFFFFF</color>
+
 </resources>

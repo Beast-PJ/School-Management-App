@@ -1,8 +1,10 @@
 package com.beast.schoolmanagementapp;
 
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -14,9 +16,11 @@ import java.util.List;
 public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder> {
 
     private List<Student> studentList;
+    private SparseBooleanArray attendanceStatus;
 
     public AttendanceAdapter(List<Student> studentList) {
         this.studentList = studentList;
+        attendanceStatus = new SparseBooleanArray(studentList.size()); // Track attendance status
     }
 
     @NonNull
@@ -29,30 +33,40 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.At
     @Override
     public void onBindViewHolder(@NonNull AttendanceViewHolder holder, int position) {
         Student student = studentList.get(position);
-        holder.studentName.setText(student.getName());
-        holder.attendanceCheckBox.setChecked(student.isPresent());
 
-        holder.attendanceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> student.setPresent(isChecked));
+        // Bind student data
+        holder.rollNumberTextView.setText(String.valueOf(student.getRollNumber()));
+        holder.studentNameTextView.setText(student.getFirstName() + " " + student.getLastName());
+
+        // Set checkbox listener to track attendance status
+        holder.attendanceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            attendanceStatus.put(holder.getAdapterPosition(), isChecked); // Update attendance status
+        });
+
+        // Set the animation for each item
+        holder.itemView.setAnimation(AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.sildetoright));
     }
+
 
     @Override
     public int getItemCount() {
         return studentList.size();
     }
 
-    public List<Student> getAttendanceList() {
-        return studentList;
+    public SparseBooleanArray getAttendanceStatus() {
+        return attendanceStatus;
     }
 
-    static class AttendanceViewHolder extends RecyclerView.ViewHolder {
+    public static class AttendanceViewHolder extends RecyclerView.ViewHolder {
 
-        TextView studentName;
+        TextView rollNumberTextView, studentNameTextView;
         CheckBox attendanceCheckBox;
 
         public AttendanceViewHolder(@NonNull View itemView) {
             super(itemView);
-            studentName = itemView.findViewById(R.id.student_name);
-            attendanceCheckBox = itemView.findViewById(R.id.attendance_checkbox);
+            rollNumberTextView = itemView.findViewById(R.id.roll_number);
+            studentNameTextView = itemView.findViewById(R.id.student_name);
+            attendanceCheckBox = itemView.findViewById(R.id.attendanceCheckBox);
         }
     }
 }

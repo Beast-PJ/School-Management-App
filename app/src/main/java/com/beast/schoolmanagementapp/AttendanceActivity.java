@@ -1,75 +1,64 @@
-// AttendanceActivity.java
 package com.beast.schoolmanagementapp;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AttendanceActivity extends AppCompatActivity {
 
-    private TextView txtHeader;
-    private ListView listViewStudents;
-    private Button btnSubmit;
-    private FirebaseFirestore db;
+    private RecyclerView recyclerView;
+    private AttendanceAdapter attendanceAdapter;
+    private Button submitAttendanceButton;
     private List<Student> studentList;
-    private StudentAdapter studentAdapter;
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
 
-        txtHeader = findViewById(R.id.txt_header);
-        listViewStudents = findViewById(R.id.list_view_students);
-        btnSubmit = findViewById(R.id.btn_submit);
-        db = FirebaseFirestore.getInstance();
+        recyclerView = findViewById(R.id.recyclerViewAttendance);
+        submitAttendanceButton = findViewById(R.id.submitAttendanceButton);
+
+        // Initialize the student list with data (this should be fetched from your database)
         studentList = new ArrayList<>();
+        // Example data
+        studentList.add(new Student(1, "John", "A.", "Doe"));
+        studentList.add(new Student(2, "Jane", "B.", "Smith"));
+        // Add more students as needed
 
-        // Get the selected standard, class, time period, and date
-        String selectedStandard = getIntent().getStringExtra("standard");
-        String selectedClass = getIntent().getStringExtra("class");
-        String selectedTimePeriod = getIntent().getStringExtra("timePeriod");
-        String selectedDate = getIntent().getStringExtra("date");
+        // Set up the RecyclerView with a GridLayoutManager
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columns
+        recyclerView.setLayoutManager(gridLayoutManager);
 
-        txtHeader.setText("Attendance for " + selectedStandard + " " + selectedClass + " on " + selectedDate + " (" + selectedTimePeriod + ")");
+        // Set up the adapter
+        attendanceAdapter = new AttendanceAdapter(studentList);
+        recyclerView.setAdapter(attendanceAdapter);
 
-        // Fetch students from Firestore, ordered by roll number
-        fetchStudents(selectedStandard, selectedClass);
-    }
-
-    private void fetchStudents(String standard, String classSection) {
-        CollectionReference studentsRef = db.collection("students");
-        Query query = studentsRef.whereEqualTo("standard", standard)
-                .whereEqualTo("class", classSection)
-                .orderBy("rollNumber");
-
-        query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Student student = document.toObject(Student.class);
-                    studentList.add(student);
+        // Handle attendance submission
+        submitAttendanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SparseBooleanArray attendanceStatus = attendanceAdapter.getAttendanceStatus();
+                for (int i = 0; i < attendanceStatus.size(); i++) {
+                    int position = attendanceStatus.keyAt(i);
+                    boolean isPresent = attendanceStatus.get(position);
+                    Student student = studentList.get(position);
+                    // Save attendance data for each student based on their attendance status
+                    // Here you would typically store it in a database
+                    Toast.makeText(AttendanceActivity.this, "Roll No: " + student.getRollNumber() +
+                            " is " + (isPresent ? "Present" : "Absent"), Toast.LENGTH_SHORT).show();
                 }
-
-                // Populate the ListView with students
-                studentAdapter = new StudentAdapter(AttendanceActivity.this, studentList);
-                listViewStudents.setAdapter((ListAdapter) studentAdapter);
-            } else {
-                Toast.makeText(AttendanceActivity.this, "Error fetching students", Toast.LENGTH_SHORT).show();
             }
         });
     }
